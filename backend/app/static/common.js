@@ -14,8 +14,8 @@ async function post(path, body) {
 }
 function 徽(v) {
   const s = String(v);
-  if (s === "对齐" || s === "1" || s === "true" || s.includes("已入")) return `<span class="徽 绿">${s}</span>`;
-  if (s.includes("缺") || s.includes("不符") || s === "0" || s === "false") return `<span class="徽 红">${s}</span>`;
+  if (s === "对齐" || s === "成功" || s === "已晋升" || s === "1" || s === "true" || s.includes("已入")) return `<span class="徽 绿">${s}</span>`;
+  if (s === "失败" || s.includes("作废") || s.includes("驳回") || s.includes("缺") || s.includes("不符") || s === "0" || s === "false") return `<span class="徽 红">${s}</span>`;
   return `<span class="徽 灰">${s}</span>`;
 }
 function 表(headers, rows, mapRow) {

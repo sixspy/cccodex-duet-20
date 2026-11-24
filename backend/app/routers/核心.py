@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from app.services import 目录, 左装载, 右装载, 对齐, 结论, 夹具, 统计, 说明
+from app.modules.装载批失败闭 import 收口
 
 路由 = APIRouter()
 
@@ -51,23 +52,36 @@ def api_左装(体: dict):
 def api_右装(体: dict):
     return 右装载.装一批(体)
 
-@路由.post("/api/左轨/夹具/{名}")
-def api_左夹(名: str):
+@路由.post("/api/左轨/夹具/{name}")
+def api_左夹(name: str):
     try:
-        return 左装载.装一批(夹具.读取(名))
+        return 左装载.装一批(夹具.读取(name))
     except FileNotFoundError:
-        raise HTTPException(404, 名)
+        raise HTTPException(404, name)
 
-@路由.post("/api/右轨/夹具/{名}")
-def api_右夹(名: str):
+@路由.post("/api/右轨/夹具/{name}")
+def api_右夹(name: str):
     try:
-        return 右装载.装一批(夹具.读取(名))
+        return 右装载.装一批(夹具.读取(name))
     except FileNotFoundError:
-        raise HTTPException(404, 名)
+        raise HTTPException(404, name)
 
 @路由.post("/api/对齐/跑")
 def api_对齐():
     return 对齐.跑对齐()
+
+
+@路由.get("/api/装载收口")
+def api_收口列表(轨别: str = ""):
+    return 收口.列收口(轨别)
+
+
+@路由.get("/api/装载收口/{batch}")
+def api_收口(batch: str):
+    r = 收口.查收口(batch)
+    if r is None:
+        raise HTTPException(404, batch)
+    return r
 
 @路由.post("/api/对拍结论/跑")
 def api_结论():
