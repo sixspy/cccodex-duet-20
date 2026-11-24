@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>源登记 · 对拍</title>
+  <link rel="stylesheet" href="/styles.css"/>
+</head>
+<body>
+  <div class="壳">
+    <header class="顶栏">
+      <div class="顶左">
+        <div class="牌名">对拍</div>
+        <div class="牌骨">左轨装载 → 右轨装载 → 同键对齐落差 → 单边悬账 → 对拍结论</div>
+      </div>
+      <nav class="管线">
+          <a href="/">对拍台</a>
+          <a href="/左轨.html">左轨流水</a>
+          <a href="/右轨.html">右轨流水</a>
+          <a href="/对齐差.html">对齐差表</a>
+          <a href="/悬账单.html">悬账单</a>
+          <a href="/对拍结论.html">对拍结论</a>
+          <a href="/源登记.html" class="亮">源登记</a>
+          <a href="/轨规.html">轨规</a>
+      </nav>
+    </header>
+    <main class="主">
+
+      <section class="行卡">
+        <h1>源登记</h1>
+        <p class="说明">左源=渠道回执，右源=核心记账。皮用金融名，去皮只是双轨来源键。</p>
+      </section>
+      <section class="行卡"><div id="表"></div></section>
+
+    </main>
+  </div>
+  <script src="/common.js"></script>
+  <script>
+(async () => {
+  const rows = await get("/api/源登记");
+  document.getElementById("表").innerHTML = 表(
+    ["源键","轨别","名称","说明"],
+    rows,
+    r => `<td>${r.源键}</td><td>${徽(r.轨别)}</td><td>${r.名称}</td><td>${r.说明||""}</td>`
+  );
+})();
+</script>
+</body>
+</html>

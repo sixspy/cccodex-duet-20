@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>对齐差表 · 对拍</title>
+  <link rel="stylesheet" href="/styles.css"/>
+</head>
+<body>
+  <div class="壳">
+    <header class="顶栏">
+      <div class="顶左">
+        <div class="牌名">对拍</div>
+        <div class="牌骨">左轨装载 → 右轨装载 → 同键对齐落差 → 单边悬账 → 对拍结论</div>
+      </div>
+      <nav class="管线">
+          <a href="/">对拍台</a>
+          <a href="/左轨.html">左轨流水</a>
+          <a href="/右轨.html">右轨流水</a>
+          <a href="/对齐差.html" class="亮">对齐差表</a>
+          <a href="/悬账单.html">悬账单</a>
+          <a href="/对拍结论.html">对拍结论</a>
+          <a href="/源登记.html">源登记</a>
+          <a href="/轨规.html">轨规</a>
+      </nav>
+    </header>
+    <main class="主">
+
+      <section class="行卡">
+        <h1>对齐差表</h1>
+        <p class="说明">按业务键汇总左右金额。差型：对齐 / 金额不符 / 左缺 / 右缺。跑对齐会重算并重写悬账单。</p>
+        <div class="工具条">
+          <button id="跑">跑对齐</button>
+          <button class="次" id="刷">刷新</button>
+        </div>
+        <pre class="报" id="报"></pre>
+      </section>
+      <section class="行卡"><div id="表"></div></section>
+
+    </main>
+  </div>
+  <script src="/common.js"></script>
+  <script>
+(async () => {
+  const paint = async () => {
+    const rows = await get("/api/对齐差");
+    document.getElementById("表").innerHTML = 表(
+      ["编号","业务键","左金额分","右金额分","差型","说明","时刻"],
+      rows,
+      r => `<td>${r.编号}</td><td>${r.业务键}</td><td>${r.左金额分 ?? "-"}</td><td>${r.右金额分 ?? "-"}</td>
+        <td>${徽(r.差型)}</td><td>${r.说明}</td><td>${r.时刻}</td>`
+    );
+  };
+  await paint();
+  document.getElementById("跑").onclick = async () => {
+    document.getElementById("报").textContent = JSON.stringify(await post("/api/对齐/跑"), null, 2);
+    await paint();
+  };
+  document.getElementById("刷").onclick = paint;
+})();
+</script>
+</body>
+</html>

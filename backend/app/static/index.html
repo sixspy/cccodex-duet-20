@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>对拍台 · 对拍</title>
+  <link rel="stylesheet" href="/styles.css"/>
+</head>
+<body>
+  <div class="壳">
+    <header class="顶栏">
+      <div class="顶左">
+        <div class="牌名">对拍</div>
+        <div class="牌骨">左轨装载 → 右轨装载 → 同键对齐落差 → 单边悬账 → 对拍结论</div>
+      </div>
+      <nav class="管线">
+          <a href="/" class="亮">对拍台</a>
+          <a href="/左轨.html">左轨流水</a>
+          <a href="/右轨.html">右轨流水</a>
+          <a href="/对齐差.html">对齐差表</a>
+          <a href="/悬账单.html">悬账单</a>
+          <a href="/对拍结论.html">对拍结论</a>
+          <a href="/源登记.html">源登记</a>
+          <a href="/轨规.html">轨规</a>
+      </nav>
+    </header>
+    <main class="主">
+
+      <section class="行卡">
+        <h1>对拍台</h1>
+        <p class="说明" id="骨架"></p>
+        <div class="标签行" id="标签"></div>
+      </section>
+      <section class="行卡">
+        <h2>水位</h2>
+        <div id="水位"></div>
+      </section>
+      <section class="行卡">
+        <h2>怎么验</h2>
+        <ol class="说明">
+          <li>打开「左轨流水」，灌夹具「左轨样例」。</li>
+          <li>打开「右轨流水」，灌夹具「右轨样例」。</li>
+          <li>打开「对齐差表」，点「跑对齐」：ORD-100 应对齐，ORD-101 金额不符，ORD-102 右缺，ORD-103 左缺。</li>
+          <li>看「悬账单」与「对拍结论」。</li>
+        </ol>
+      </section>
+
+    </main>
+  </div>
+  <script src="/common.js"></script>
+  <script>
+(async () => {
+  const o = await get("/api/概览");
+  document.getElementById("骨架").textContent = o.骨架 || "";
+  document.getElementById("标签").innerHTML = [
+    ["皮", o.皮], ["去皮", o.去皮], ["站名", o.站名]
+  ].map(([k,v]) => `<span class="标签">${k}：${v||"-"}</span>`).join("");
+  document.getElementById("水位").innerHTML = 统计([
+    ["左轨笔数", o.左笔数], ["右轨笔数", o.右笔数],
+    ["对齐差行", o.对齐差数], ["悬账", o.悬账数], ["结论", o.结论数]
+  ]);
+})();
+</script>
+</body>
+</html>

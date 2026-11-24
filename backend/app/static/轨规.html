@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>轨规 · 对拍</title>
+  <link rel="stylesheet" href="/styles.css"/>
+</head>
+<body>
+  <div class="壳">
+    <header class="顶栏">
+      <div class="顶左">
+        <div class="牌名">对拍</div>
+        <div class="牌骨">左轨装载 → 右轨装载 → 同键对齐落差 → 单边悬账 → 对拍结论</div>
+      </div>
+      <nav class="管线">
+          <a href="/">对拍台</a>
+          <a href="/左轨.html">左轨流水</a>
+          <a href="/右轨.html">右轨流水</a>
+          <a href="/对齐差.html">对齐差表</a>
+          <a href="/悬账单.html">悬账单</a>
+          <a href="/对拍结论.html">对拍结论</a>
+          <a href="/源登记.html">源登记</a>
+          <a href="/轨规.html" class="亮">轨规</a>
+      </nav>
+    </header>
+    <main class="主">
+
+      <section class="行卡 双栏">
+        <div>
+          <h1>轨规</h1>
+          <div class="工具条">
+            <label>金额容差分 <input id="容差" style="width:100px"/></label>
+            <label>站名 <input id="站名" style="width:120px"/></label>
+            <button id="存">保存</button>
+          </div>
+          <pre class="报" id="报"></pre>
+        </div>
+        <div>
+          <h2>口径</h2>
+          <ul class="说明">
+            <li>对齐键默认业务键；同键多笔先汇总再比。</li>
+            <li>容差分内算对齐，否则金额不符。</li>
+            <li>仅单边有键 → 对齐差记左缺/右缺，并写入悬账单。</li>
+          </ul>
+        </div>
+      </section>
+
+    </main>
+  </div>
+  <script src="/common.js"></script>
+  <script>
+(async () => {
+  const s = await get("/api/轨规");
+  document.getElementById("容差").value = s.金额容差分 || 0;
+  document.getElementById("站名").value = s.站名 || "对拍";
+  document.getElementById("报").textContent = JSON.stringify(s, null, 2);
+  document.getElementById("存").onclick = async () => {
+    const body = { 金额容差分: document.getElementById("容差").value, 站名: document.getElementById("站名").value };
+    document.getElementById("报").textContent = JSON.stringify(await post("/api/轨规", body), null, 2);
+  };
+})();
+</script>
+</body>
+</html>
